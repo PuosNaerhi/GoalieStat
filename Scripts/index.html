@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html ng-app= myApp>
+	<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	<script type="text/javascript" src=myApp.js></script>
+	<link rel="stylesheet" type="text/css" href="style.css" media="screen" />
+<head>
+
+</head>
+
+<body>
+<div ng-controller="TabsCtrl">
+
+
+	<input id="radio_tab_group1" type="radio" name="tab_group" ng-click="setTab(1)" ng-class="{active:isSet(1)}" checked="checked">
+	<label for="radio_tab_group1">play</label>
+	<input id="radio_tab_group2" type="radio" name="tab_group" ng-click="setTab(2)" ng-class="{active:isSet(2)}">
+	<label for="radio_tab_group2">result</label>
+	<input id="radio_tab_group3" type="radio" name="tab_group" ng-click="setTab(3)" ng-class="{active:isSet(3)}">
+	<label for="radio_tab_group3">calc</label>
+	<input id="radio_tab_group4" type="radio" name="tab_group" ng-click="setTab(4)" ng-class="{active:isSet(4)}">
+	<label for="radio_tab_group4">dump</label>
+	<button ng-click="getBlob()">Save</button>
+	<input type="file" id="fileInput" onchange="angular.element(this).scope().fileChanged(this)">
+
+	<div ng-show="isSet(1)">
+		<div ng-controller="MainSelectorCtrl" >
+			<button ng-click="changeAttackDirection()">{{buttonText}}</button>
+			<input id="period1" type="radio" name="periodGroup" ng-model="periodGroup" value="period1" ng-click="setPeriodGroup(periodGroup)"><label for="period1">Per 1</label>
+			<input id="period2" type="radio" name="periodGroup" ng-model="periodGroup" value="period2" ng-click="setPeriodGroup(periodGroup)"><label for="period2">Per 2</label>
+			<input id="period3" type="radio" name="periodGroup" ng-model="periodGroup" value="period3" ng-click="setPeriodGroup(periodGroup)"><label for="period3">Per 3</label>
+			<input id="period4" type="radio" name="periodGroup" ng-model="periodGroup" value="period4" ng-click="setPeriodGroup(periodGroup)"><label for="period4">OT</label>
+			
+			<input id="radioWfGroup1" type="radio" name="whatFieldGroup" ng-model="whatFieldGroup" value="5vs5" ng-click="setWhatfieldGroup(whatFieldGroup)"><label for="radioWfGroup1">5vs5</label>
+			<input id="radioWfGroup2" type="radio" name="whatFieldGroup" ng-model="whatFieldGroup" value="PP" ng-click="setWhatfieldGroup(whatFieldGroup)"><label for="radioWfGroup2">PP</label>
+			<input id="radioWfGroup3" type="radio" name="whatFieldGroup" ng-model="whatFieldGroup" value="SH" ng-click="setWhatfieldGroup(whatFieldGroup)"><label for="radioWfGroup3">SH</label>
+			<input id="radioWfGroup4" type="radio" name="whatFieldGroup" ng-model="whatFieldGroup" value="WG" ng-click="setWhatfieldGroup(whatFieldGroup)"><label for="radioWfGroup4">WG</label>
+			<input id="radioWfGroup5" type="radio" name="whatFieldGroup" ng-model="whatFieldGroup" value="EN" ng-click="setWhatfieldGroup(whatFieldGroup)"><label for="radioWfGroup5">EN</label>
+			<input id="radioWfGroup6" type="radio" name="whatFieldGroup" ng-model="whatFieldGroup" value="SO" ng-click="setWhatfieldGroup(whatFieldGroup)"><label for="radioWfGroup6">SO</label>
+			<button ng-click="addGoal(1)">+</button>
+			<button ng-click="addGoal(0)">-</button>
+			{{goalDifference}}
+		</div>
+
+
+		<div ng-controller="CanvasCtrl" style="float: left;">
+			<div>
+				<canvas id="FieldCanvas" width="482" height="242">Your browser does not support the HTML5 canvas tag.</canvas>
+			</div>
+			<div style="float: left;">
+				<canvas id="GoalCanvas" width="229" height="162">Your browser does not support the HTML5 canvas tag.</canvas>
+				<canvas id="AreaCanvas" width="229" height="162">Your browser does not support the HTML5 canvas tag.</canvas>
+			</div>
+		</div>
+		<div ng-controller="EventSelectorCtrl"  style="float: left;">
+			<div style="float: left;">
+				<table border="3">
+
+					<tbody>		
+						<tr><td class="green"><input id="radioEvent1Group1" type="radio" name="event1Group" ng-model="event1Group" value="1" ng-click="setEvent1Group(event1Group)"><label for="radioEvent1Group1">Vastahyökkäys</label></td></tr>
+						<tr><td class="green"><input id="radioEvent1Group2" type="radio" name="event1Group" ng-model="event1Group" value="2" ng-click="setEvent1Group(event1Group)"><label for="radioEvent1Group2">Suora hyökkäys</label></td></tr>
+						<tr><td class="green"><input id="radioEvent1Group3" type="radio" name="event1Group" ng-model="event1Group" value="3" ng-click="setEvent1Group(event1Group)"><label for="radioEvent1Group3">Pitkä hyökkäys</label></td></tr>
+						<tr><td class="green"><input id="radioEvent1Group4" type="radio" name="event1Group" ng-model="event1Group" value="4" ng-click="setEvent1Group(event1Group)"><label for="radioEvent1Group4">Vapaalyönti</label></td></tr>
+					</tbody>
+				</table>
+				<table border="3">
+
+					<tbody>
+						<tr><td class="green"><input id="radioEvent3Group1" type="radio" name="event3Group" ng-model="event3Group" value="1" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group1">Rannari</label></td></tr>
+						<tr><td class="green"><input id="radioEvent3Group2" type="radio" name="event3Group" ng-model="event3Group" value="2" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group2">Lämäri</label></td></tr>
+						<tr><td class="green"><input id="radioEvent3Group3" type="radio" name="event3Group" ng-model="event3Group" value="3" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group3">Suoraa syötöstä</label></td></tr>
+						<tr><td class="green"><input id="radioEvent3Group4" type="radio" name="event3Group" ng-model="event3Group" value="4" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group4">Ilmapallo</label></td></tr>
+						<tr><td class="green"><input id="radioEvent3Group5" type="radio" name="event3Group" ng-model="event3Group" value="5" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group5">Rysty</label></td></tr>
+						<tr><td class="green"><input id="radioEvent3Group6" type="radio" name="event3Group" ng-model="event3Group" value="6" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group6">Rebound</label></td></tr>
+						<tr><td class="green"><input id="radioEvent3Group7" type="radio" name="event3Group" ng-model="event3Group" value="7" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group7">Kierto</label></td></tr>
+						<tr><td class="green"><input id="radioEvent3Group8" type="radio" name="event3Group" ng-model="event3Group" value="8" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group8">Harhautus</label></td></tr>
+						<tr><td class="green"><input id="radioEvent3Group9" type="radio" name="event3Group" ng-model="event3Group" value="9" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group9">Ohjaus</label></td></tr>
+						<tr><td class="green"><input id="radioEvent3Group10" type="radio" name="event3Group" ng-model="event3Group" value="10" ng-click="setEvent3Group(event3Group)"><label for="radioEvent3Group10">Purku</label></td></tr>
+					</tbody>
+				</table>
+			</div>
+			<div style="float: left;">
+				<table border="3">
+	
+					<tbody>
+						<tr><td class="green"><input id="radioEvent2Group1" type="radio" name="event2Group" ng-model="event2Group" value="1" ng-click="setEvent2Group(event2Group)"><label for="radioEvent2Group1">Suora veto</label></td></tr>
+						<tr><td class="green"><input id="radioEvent2Group2" type="radio" name="event2Group" ng-model="event2Group" value="2" ng-click="setEvent2Group(event2Group)"><label for="radioEvent2Group2">Poikittais syöttö</label></td></tr>
+						<tr><td class="green"><input id="radioEvent2Group3" type="radio" name="event2Group" ng-model="event2Group" value="3" ng-click="setEvent2Group(event2Group)"><label for="radioEvent2Group3">PS yli GC:n</label></td></tr>
+						<tr><td class="green"><input id="radioEvent2Group4" type="radio" name="event2Group" ng-model="event2Group" value="4" ng-click="setEvent2Group(event2Group)"><label for="radioEvent2Group4">Pääty syöttö</label></td></tr>
+						<tr><td class="green"><input id="radioEvent2Group5" type="radio" name="event2Group" ng-model="event2Group" value="5" ng-click="setEvent2Group(event2Group)"><label for="radioEvent2Group5">Kulmasta nouse</label></td></tr>
+						<tr><td class="green"><input id="radioEvent2Group6" type="radio" name="event2Group" ng-model="event2Group" value="6" ng-click="setEvent2Group(event2Group)"><label for="radioEvent2Group6">Maski laukaus</label></td></tr>
+					</tbody>
+				</table>
+				<table border="3">
+
+					<tbody>
+						<tr><td class="green"><input id="radioEvent4Group1" type="radio" name="event4Group" ng-model="event4Group" value="1" ng-click="setEvent4Group(event4Group)"><label for="radioEvent4Group1">Torjunta</label></td></tr>
+						<tr><td class="green"><input id="radioEvent4Group2" type="radio" name="event4Group" ng-model="event4Group" value="2" ng-click="setEvent4Group(event4Group)"><label for="radioEvent4Group2">Maali</label></td></tr>
+						<tr><td class="green"><input id="radioEvent4Group3" type="radio" name="event4Group" ng-model="event4Group" value="3" ng-click="setEvent4Group(event4Group)"><label for="radioEvent4Group3">Ohi</label></td></tr>
+						<tr><td class="green"><input id="radioEvent4Group4" type="radio" name="event4Group" ng-model="event4Group" value="4" ng-click="setEvent4Group(event4Group)"><label for="radioEvent4Group4">Peitto</label></td></tr>
+					</tbody>
+				</table>
+			<button ng-click="takeAction()">Save</button>
+			</div>
+		</div>
+	</div>
+	<div ng-show="isSet(2)">
+
+		<div ng-controller="ResultCtrl" style="float: left;">
+			<div>
+				<canvas id="ResultFieldCanvas" width="482" height="242">Your browser does not support the HTML5 canvas tag.</canvas>
+			</div>
+			<div style="float: left;">
+				<canvas id="ResultGoalCanvas" width="229" height="162">Your browser does not support the HTML5 canvas tag.</canvas>
+				<canvas id="ResultAreaCanvas" width="229" height="162">Your browser does not support the HTML5 canvas tag.</canvas>
+			</div>
+
+		</div>
+		<div ng-controller="ResultCtrl" style="float: left;">
+						<table>
+							<td ng-repeat="period in periods"><input id="presult+{{period.periodName}}" type="checkbox"  ng-model="period.isChecked" ng-change="takeAction()"><label for=presult+{{period.periodName}}>{{period.periodName}}</label></td>
+						</table>
+						<table>
+        						<td ng-repeat="strength in strengths"><input id="result+{{strength.strengthName}}" type="checkbox"  ng-model="strength.isChecked" ng-change="takeAction()"><label for=result+{{strength.strengthName}}>{{strength.strengthName}}</label></td>
+						</table>
+			<button ng-click="selectAll()">Select All</button>
+			<button ng-click="unselectAll()">Unselect All</button>
+		</div>
+
+	</div>
+	<div ng-show="isSet(3)">
+
+		<div ng-controller="CalculationCtrl" style="float: left;">
+			<button ng-click="takeAction()">Calc</button>
+</br>
+			<label>SaveP {{savep}}%</label></br>
+			<label>GCSaveP {{gcsavep}}%</label></br>
+			<label>OutGCSaveP {{outgcsavep}}%</label></br>
+			<label>EvenSaveP {{evensavep}}%</label></br>
+			<label>SHSaveP {{shsavep}}%</label></br>
+			<label>1GoalDiffSaveP {{ogdsavep}}%</label></br>
+			<label>+2GoalDiffSaveP {{plustwogdsavep}}%</label></br>
+			<label>-2GoalDiffSaveP {{minustwogdsavep}}%</label></br>
+			<label>DefenseRate {{defenserate}}%</label></br>
+		</div>
+	</div>
+	<div ng-show="isSet(4)">
+
+		<div ng-controller="dumpCtrl" style="float: left;">
+
+			<label>{{event}}</label></br>
+
+		</div>
+	</div>
+</div>
+
+
+</body>
+</html>
